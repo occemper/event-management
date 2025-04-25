@@ -14,9 +14,36 @@ class EventController extends Controller
      */
     public function index()
     {
-        return EventResourse::collection(Event::with('user')->paginate());
+        $query = Event::query();
+        $relations = ['user', 'attendees', 'attendees.user'];
+
+        foreach ($relations as $relation) {
+            $query->when(
+                $this->shouldIncludRelation($relation),
+                fn($q) => $q->with($relation)
+            );
+        }
+
+        $this->shouldIncludRelation('user');
+
+        return EventResourse::collection(
+            $query->latest()->paginate()
+        );
     }
 
+
+    protected function shouldIncludRelation(string $relation): bool
+    {
+        $include = request()->query('include');
+
+        if (!$include) {
+            return false;
+        }
+
+        $relations = array_map('trim', explode(',', $include));
+
+        return in_array($relation, $relations);
+    }
     /**
      * Store a newly created resource in storage.
      */
