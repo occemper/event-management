@@ -20,6 +20,8 @@ class AttendeeController extends Controller
      */
     public function index(Event $event)
     {
+        Gate::authorize('viewAny', $event);
+
         $attendees = $this->loadRelationships($event->attendees()->latest());
 
         return AttendeeResource::collection($attendees->paginate());
@@ -30,6 +32,8 @@ class AttendeeController extends Controller
      */
     public function store(Request $request, Event $event)
     {
+        Gate::authorize('create', $event);
+
         $attendee = $this->loadRelationships(
             $event->attendees()->create(
                 [
@@ -46,17 +50,11 @@ class AttendeeController extends Controller
      */
     public function show(Event $event, Attendee $attendee)
     {
+        Gate::authorize('view', $attendee);
+
         return new AttendeeResource(
             $this->loadRelationships($attendee)
         );
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
@@ -64,9 +62,7 @@ class AttendeeController extends Controller
      */
     public function destroy(Event $event, Attendee $attendee)
     {
-        if (Gate::denies('delete-attendee', [$event, $attendee])) {
-            abort(403, 'You are not authorized to update this event!');
-        };
+        Gate::authorize('delete', $attendee);
 
         $attendee->delete();
 
