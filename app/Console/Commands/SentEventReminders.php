@@ -35,7 +35,7 @@ class SentEventReminders extends Command
 
         $events->each(
             fn($event) => $event->attendees()->each(
-                fn($attendee) => $this->info("Notifying the user {$attendee->user->id}")
+                fn($attendee) => $this->info("Notifying the user {$attendee->user->id} there's soon gonna be event {$event->id}")
             )
         );
 
