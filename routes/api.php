@@ -13,7 +13,7 @@ Route::middleware('auth:sanctum')
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])
-    ->middleware('auth:sanctum');
+    ->middleware('auth:sanctum', 'throttle:api');
 
 
 // Public routes
@@ -23,13 +23,13 @@ Route::apiResource('events', EventController::class)
 // Protected routes
 Route::apiResource('events', EventController::class)
     ->only(['store', 'update', 'destroy'])
-    ->middleware(['auth:sanctum']);
+    ->middleware(['auth:sanctum', 'throttle:api']);
 
 // Protected routes
 Route::apiResource('events.attendees', AttendeeController::class)
     ->scoped()
     ->only(['store', 'destroy'])
-    ->middleware(['auth:sanctum']);
+    ->middleware(['auth:sanctum', 'throttle:api']);
 
 
 // Public routes
