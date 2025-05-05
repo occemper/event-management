@@ -6,14 +6,14 @@ use App\Notifications\EventReminderNotification;
 use Illuminate\Console\Command;
 use illuminate\Support\Str;
 
-class SentEventReminders extends Command
+class SendEventReminders extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:sent-event-reminders';
+    protected $signature = 'app:send-event-reminders';
 
     /**
      * The console command description.
